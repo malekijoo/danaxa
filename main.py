@@ -9,42 +9,24 @@ import cv2
 import matplotlib.pyplot as plt
 
 
+print("TensorFlow version: {}".format(tf.__version__))
+print("Eager execution: {}".format(tf.executing_eagerly()))
+
 ds = dataset.load_dataset(name="davis", split="train")
 print(ds)
+ds = dataset.pad(ds)
+utils.frame_show(ds)
 
-first = next(ds)
-print(first['video']['frames'].numpy().shape)
-utils.frame_show(first)
-first = dataset.pad(first['video'])
-print(first['video']['frames'].numpy().shape)
-
-
-first = next(ds)
-print(first['video']['frames'].numpy().shape)
-
-first = next(ds)
-print(first)
-print(first['video']['frames'].numpy().shape)
-# for example in
-# print(ds.padded_batch(10))
-# print(len(ds))
-# ds = ds.take(5)
-# ds = ds.batch(60)
-# print(len(ds))
-# print(len(ds[0]))
-# print(info.features['video']['frames'].dtype)
-# print(info.features['metadata']['video_name'])
-# print(dataset.metadata_extractor(ds))
-# dataset.frame_show(ds, Frame_No=30)
-# dt = iter(ds)
-# print(dt['video']['frames'].numpy().shape)
-# print(next(dt)['video']['frames'].numpy().shape)
-# print(next(dt)['video']['frames'].numpy().shape)
-for example in ds:
-    print(example['video']['frames'].numpy().shape)
-    if example['video']['frames'].numpy().shape[2] != 854:
-        print('not 854')
-
+# for example in ds:
+#     print(example['video']['frames'].numpy().shape)
+#     if example['video']['frames'].numpy().shape[2] != 854:
+#         print(example['video']['frames'].numpy().shape)
+#         print('not 854 \n')
+#         # print(type(example['video']['frames']))
+#         # example['video']['frames'] = tf.image.resize_with_crop_or_pad(example['video']['frames'], 480, 854)
+#         # print(type(example['video']['frames']))
+#         # print('padded', example['video']['frames'].numpy().shape)
+#         # print('\n')
 
 
 

@@ -42,7 +42,8 @@ def load_dataset(name, split='train'):
              simple sequence dataset for Testing Phase
     """
     ds, _ = tfds.load(name=name, split=split, with_info=True, download=False)
-    return iter(ds)
+    print(ds)
+    return ds
 
 
 
@@ -53,13 +54,19 @@ def metadata_extractor(ds):
 
 def pad(ds):
     """
-    we pad the data ecperically the second dimension
-    (80, 480, 878, 3) -> (80, 480, 878, 3)
-    (76, 480, 854, 3) -> (76, 480, 878, 3)
+    Resize with crop or pad the data,  the second dimension
+    pass: (80, 480, 854, 3) -> (80, 480, 854, 3)
+    pad:  (80, 480, 854, 3) -> (80, 480, 854, 3)
+    crop: (76, 480, 938, 3) -> (76, 480, 854, 3)
 
+    TODO:
+        shape condition for other dataset
     """
     def padding(ele):
-        return tf.image.resize_with_crop_or_pad(ele, 480, 854)
+        ele['video']['frames'] = tf.image.resize_with_crop_or_pad(ele['video']['frames'], 480, 854)
+        ele['video']['segmentations'] = tf.image.resize_with_crop_or_pad(ele['video']['segmentations'], 480, 854)
+        return ele
 
-    return ds['video'].map(lambda x, y: padding)
+
+    return ds.map(lambda x: padding(x))
 
