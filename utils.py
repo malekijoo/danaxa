@@ -3,6 +3,17 @@ import matplotlib.pyplot as plt
 
 
 def frame_show(ds, video_no=0, frame_no=0, with_segment=True):
+    """
+    Ploting the image and its segmentation
+    :param ds: The dataset
+    :param video_no: The number of place the in the row
+    :param frame_no: Number of the frame
+    :param with_segment: Plot the segmentation alogn video or not
+
+    TODO: DO IT FOR OTHER DATASETS
+          USE OTHER LIBRARY TO SHOW THE IMAGE SUCH AS PILLOW
+
+    """
     ds = list(ds)
     video = ds[video_no]
     if with_segment:
