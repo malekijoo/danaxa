@@ -3,7 +3,6 @@ import matplotlib.pyplot as plt
 
 
 def frame_show(ds, video_no=0, frame_no=0, with_segment=True):
-
     ds = list(ds)
     video = ds[video_no]
     if with_segment:
@@ -17,9 +16,10 @@ def frame_show(ds, video_no=0, frame_no=0, with_segment=True):
 
     plt.show()
 
+
 def shape_extractor(ds):
     """
-    Return the shape of the dataset
+    Return shapes of a dataset
     :param ds: a prefetch dataset object
     :return: shape of frames, shape of segmentation
 
@@ -27,5 +27,5 @@ def shape_extractor(ds):
     """
     indim_shape = ds.take(1)
     for example in tfds.as_numpy(indim_shape):
-        return example['video']['frames'].shape[1:],\
+        return example['video']['frames'].shape[1:], \
                example['video']['segmentations'].shape[1:]
