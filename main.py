@@ -1,6 +1,7 @@
 import os
 import utils
 import dataset
+import models as ml
 import tensorflow as tf
 import tensorflow_datasets as tfds
 import cv2
@@ -11,11 +12,19 @@ import matplotlib.pyplot as plt
 
 print("TensorFlow version: {}".format(tf.__version__))
 print("Eager execution: {}".format(tf.executing_eagerly()))
+print("Is there a GPU available: "),
+print(tf.config.list_physical_devices("GPU"))
 
 ds = dataset.load_dataset(name="davis", split="train")
 print(ds)
 ds = dataset.pad(ds)
-utils.frame_show(ds)
+
+model = ml.VOS_Model()
+
+
+
+
+# utils.frame_show(ds)
 
 # for example in ds:
 #     print(example['video']['frames'].numpy().shape)
