@@ -13,13 +13,30 @@ import matplotlib.pyplot as plt
 print("TensorFlow version: {}".format(tf.__version__))
 print("Eager execution: {}".format(tf.executing_eagerly()))
 print("Is there a GPU available: "),
-print(tf.config.list_physical_devices("GPU"))
+print('No GPU is available' if len(tf.config.list_physical_devices("GPU")) == 0 else 'Yes, there is a GPU')
 
 ds = dataset.load_dataset(name="davis", split="train")
-print(ds)
 ds = dataset.pad(ds)
+x_indim, _ = utils.shape_extractor(ds)
 
-model = ml.VOS_Model()
+print(x_indim)
+model = ml.VOS_Model(indim=x_indim)
+print(model.summary())
+
+
+
+def train():
+    pass
+
+def test():
+    pass
+
+
+
+
+if __name__ == '__main__':
+    pass
+    # print('Video Object Segmentation')
 
 
 
@@ -38,21 +55,3 @@ model = ml.VOS_Model()
 #         # print('\n')
 
 
-
-
-
-
-
-
-def train():
-    pass
-
-def test():
-    pass
-
-
-
-
-if __name__ == '__main__':
-    pass
-    # print('Video Object Segmentation')

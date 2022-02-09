@@ -38,11 +38,12 @@ class ResBlock(tf.keras.Model):
 
 class Encoder(tf.keras.Model):
 
-  def __init__(self, latent_dim):
+  def __init__(self, indim, latent_dim):
 
     super(Encoder, self).__init__()
 
     self.latent_dim = latent_dim
+    self.resnet50 = tf.keras.applications.resnet50.ResNet50(input_shape=indim, weights='imagenet', include_top=False)
     self._conv2d = tf.keras.layers.Conv2D(64, kernel_size=7, strides=2, padding=3, activation='relu')
     self._flatten = tf.keras.layers.Flatten()
     self._dense = tf.keras.layers.Dense(latent_dim, activation='relu')
@@ -50,6 +51,7 @@ class Encoder(tf.keras.Model):
 
   def call(self, x):
 
+    x = self.resnet50(x)
     x = self._conv2d(x)
     x = self._conv2d(x)
     x = self._flatten(x)
@@ -63,8 +65,6 @@ class Decoder(tf.keras.Model):
   def __init__(self, outdim, latent_dim):
 
     super(Encoder, self).__init__()
-
-
 
 
   def call(self, x):
@@ -85,20 +85,21 @@ class Decoder(tf.keras.Model):
 
 class VOS_Model(tf.keras.Model):
 
-  def __init__(self):
+  def __init__(self, indim, outdim=None):
     print('Space-time Memory Networks: is initializing.')
 
-    super().__init__()
+    super(VOS_Model, self).__init__()
+    self.indim = indim
+    self.outdim = outdim
 
-    self.dense1 = tf.keras.layers.Dense(4, activation=tf.nn.relu)
-    self.dense2 = tf.keras.layers.Dense(5, activation=tf.nn.softmax)
-    self.dropout = tf.keras.layers.Dropout(0.5)
+    self.encoder = Encoder(indim=indim, latent_dim=64)
 
-  def call(self, inputs, training=False):
-    x = self.dense1(inputs)
-    if training:
-      x = self.dropout(x, training=training)
-    return self.dense2(x)
+
+  # def call(self, inputs, training=False):
+  #   x = self.dense1(inputs)
+  #   if training:
+  #     x = self.dropout(x, training=training)
+  #   return self.dense2(x)
 
 
 # keras.utils.plot_model(model, "my_first_model_with_shape_info.png", show_shapes=True)

@@ -42,7 +42,7 @@ def load_dataset(name, split='train'):
              simple sequence dataset for Testing Phase
     """
     ds, _ = tfds.load(name=name, split=split, with_info=True, download=False)
-    print(ds)
+    # print(ds)
     return ds
 
 
@@ -62,11 +62,13 @@ def pad(ds):
     TODO:
         shape condition for other dataset
     """
+    PREFETCH_BUFFER = 60
+
     def padding(ele):
         ele['video']['frames'] = tf.image.resize_with_crop_or_pad(ele['video']['frames'], 480, 854)
         ele['video']['segmentations'] = tf.image.resize_with_crop_or_pad(ele['video']['segmentations'], 480, 854)
         return ele
 
 
-    return ds.map(lambda x: padding(x))
+    return ds.map(lambda x: padding(x)).prefetch(PREFETCH_BUFFER)
 
