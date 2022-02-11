@@ -1,5 +1,10 @@
 import tensorflow as tf
-
+# If you got an SSL error when downloading
+# the resnet50 pretrained file on ImageNet
+# Uncomment the following links
+# import ssl
+#
+# ssl._create_default_https_context = ssl._create_unverified_context
 
 class ResBlock(tf.keras.Model):
 
@@ -44,18 +49,18 @@ class Encoder(tf.keras.Model):
 
     self.latent_dim = latent_dim
     self.resnet50 = tf.keras.applications.resnet50.ResNet50(input_shape=indim, weights='imagenet', include_top=False)
-    self._conv2d = tf.keras.layers.Conv2D(64, kernel_size=7, strides=2, padding=3, activation='relu')
-    self._flatten = tf.keras.layers.Flatten()
-    self._dense = tf.keras.layers.Dense(latent_dim, activation='relu')
+    # self._conv2d = tf.keras.layers.Conv2D(64, kernel_size=7, strides=2, padding=3, activation='relu')
+    # self._flatten = tf.keras.layers.Flatten()
+    # self._dense = tf.keras.layers.Dense(latent_dim, activation='relu')
 
 
   def call(self, x):
 
     x = self.resnet50(x)
-    x = self._conv2d(x)
-    x = self._conv2d(x)
-    x = self._flatten(x)
-    x = self._dense(x)
+    # x = self._conv2d(x)
+    # x = self._conv2d(x)
+    # x = self._flatten(x)
+    # x = self._dense(x)
 
     return x
 

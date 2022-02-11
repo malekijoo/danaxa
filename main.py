@@ -21,7 +21,7 @@ x_indim, _ = utils.shape_extractor(ds)
 
 print(x_indim)
 model = ml.VOS_Model(indim=x_indim)
-print(model.summary())
+# print(model.summary())
 
 
 
