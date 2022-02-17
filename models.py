@@ -49,7 +49,7 @@ class Encoder(tf.keras.Model):
 
     self.latent_dim = latent_dim
     self.resnet50 = tf.keras.applications.resnet50.ResNet50(input_shape=indim, weights='imagenet', include_top=False)
-    self._conv2d = tf.keras.layers.Conv2D(64, kernel_size=7, strides=2, padding=3, activation='relu')
+    self._conv2d = tf.keras.layers.Conv2D(64, kernel_size=7, strides=2, padding=(3, 3), activation='relu')
     self._flatten = tf.keras.layers.Flatten()
     self._dense = tf.keras.layers.Dense(latent_dim, activation='relu')
 
@@ -90,7 +90,7 @@ class Decoder(tf.keras.Model):
 
 class VOS_Model(tf.keras.Model):
 
-  def __init__(self, indim, outdim=None):
+  def __init__(self, input_x, indim, outdim=None):
     print('Space-time Memory Networks: is initializing.')
 
     super(VOS_Model, self).__init__()
@@ -98,6 +98,7 @@ class VOS_Model(tf.keras.Model):
     self.outdim = outdim
 
     self.encoder = Encoder(indim=indim, latent_dim=64)
+    self.encoder(input_x)
 
 
   # def call(self, inputs, training=False):

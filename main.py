@@ -1,4 +1,5 @@
 import os
+import numpy as np
 import utils
 import dataset
 import models as ml
@@ -16,11 +17,38 @@ print("Is there a GPU available: "),
 print('No GPU is available' if len(tf.config.list_physical_devices("GPU")) == 0 else 'Yes, there is a GPU')
 
 ds = dataset.load_dataset(name="davis", split="train")
-ds = dataset.pad(ds)
-x_indim, _ = utils.shape_extractor(ds)
+print(ds)
 
-print(x_indim)
-model = ml.VOS_Model(indim=x_indim)
+# t = ds.take(4)
+# for example in tfds.as_numpy(t):
+#     print(example['video']['segmentations'].shape, example['video']['frames'].shape)
+#
+ds = dataset.pad(ds)
+print(ds)
+
+t = ds.take(4)
+for example in tfds.as_numpy(t):
+    print(example['x'].shape, example['y'].shape)
+#
+# x_indim, _ = utils.shape_extractor(ds)
+#
+# print(x_indim)
+# element = next(iter(ds))
+# print(element)
+
+# for example in tfds.as_numpy(ds):
+#     print(np.unique(example['video']['segmentations']))
+#     print(example['metadata'])
+#     print(example['video'])
+
+# utils.frame_show(ds, video_no=[1, 2, 3, 4])
+
+
+# print(element[])
+# print('segmentation label in ', np.unique(element['video']['segmentations'])
+
+
+# model = ml.VOS_Model(input_x=element, indim=x_indim)
 # print(model.summary())
 
 
