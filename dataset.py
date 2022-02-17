@@ -4,6 +4,7 @@
 #   howpublished = {\url{https://www.tensorflow.org/datasets}},
 # }
 
+import collections
 import tensorflow as tf
 import tensorflow_datasets as tfds
 import matplotlib.pyplot as plt
@@ -52,6 +53,22 @@ def metadata_extractor(ds):
         return (example['metadata']['num_frames'], # number of frames
                 example['metadata']['video_name']) # objects in video
 
+# def preprocess(ds):
+#
+#     PREFETCH_BUFFER = 60
+#
+#
+#     def reshape(element):
+#         shape = (480, 854, 3)
+#         return collections.OrderedDict(
+#             x=tf.reshape(element['video']['frames'], shape),
+#             y=tf.reshape(element['video']['segmentations'], shape),
+#             label=tf.reshapeelement[])
+#
+#     return ds.map(lambda x: reshape(x)).prefetch(PREFETCH_BUFFER)
+
+
+
 def pad(ds):
     """
     Resize with crop or pad the data,  the second dimension
@@ -65,9 +82,15 @@ def pad(ds):
     PREFETCH_BUFFER = 60
 
     def padding(ele):
+
         ele['video']['frames'] = tf.image.resize_with_crop_or_pad(ele['video']['frames'], 480, 854)
+        # ele['video']['frames'] = tf.image.resize_with_crop_or_pad(ele['video']['frames'][:-1, :, :, ], 480, 854)
         ele['video']['segmentations'] = tf.image.resize_with_crop_or_pad(ele['video']['segmentations'], 480, 854)
-        return ele
+
+        return collections.OrderedDict(
+            x=ele['video']['frames'],
+            y=ele['video']['segmentations'],
+        )
 
 
     return ds.map(lambda x: padding(x)).prefetch(PREFETCH_BUFFER)
