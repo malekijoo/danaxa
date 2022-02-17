@@ -13,21 +13,32 @@ def frame_show(ds, video_no=0, frame_no=0, with_segment=True):
     :param with_segment: Plot the segmentation alogn video or not
 
     TODO: DO IT FOR OTHER DATASETS
-          USE OTHER LIBRARY TO SHOW THE IMAGE SUCH AS PILLOW
+          USE OTHER LIBRARY TO SHOW THE IMAGE SUCH AS PILLOW Library
 
     """
-    ds = list(ds)
-    video = ds[video_no]
-    if with_segment:
-        fig, axs = plt.subplots(2)
-        frames = video['video']['frames']
-        segments = video['video']['segmentations']
-        axs[1].imshow(segments[frame_no, :, :, 0], interpolation='nearest')
-        axs[0].imshow(frames[frame_no, :, :, :], interpolation='nearest')
-    else:
-        plt.show(video[frame_no, :, :, :], interpolation='nearest')
+    def _plot(num):
+        video = ds[num]
+        if with_segment:
+            fig, axs = plt.subplots(2)
+            frames = video['x']
+            segments = video['y']
+            axs[1].imshow(segments[frame_no, :, :, 0], interpolation='nearest')
+            axs[0].imshow(frames[frame_no, :, :, :], interpolation='nearest')
+        else:
+            plt.show(video[frame_no, :, :, :], interpolation='nearest')
 
-    plt.show()
+        plt.show()
+
+    ds = list(ds)
+
+    if isinstance(video_no, list):
+        for num in video_no:
+            _plot(num)
+
+    else:
+        _plot(video_no)
+
+
 
 
 def shape_extractor(ds):
@@ -36,31 +47,11 @@ def shape_extractor(ds):
     :param ds: a prefetch dataset object
     :return: shape of frames, shape of segmentation
 
-    TODO: Implement for other datasets
+    TODO: Implement it for other datasets
     """
     indim_shape = ds.take(1)
     for example in tfds.as_numpy(indim_shape):
-        return example['video']['frames'].shape[1:], \
-               example['video']['segmentations'].shape[1:]
+        return example['x'].shape[1:], \
+               example['y'].shape[1:]
 
 
-def video_name_to_categorical(ds):
-    """
-
-    :param ds: ds is a nested datasets including VIDEOs
-               and corresponding SEGMENTATIONs besides
-               the methadata for each VIDEO.
-
-    :return: This function returns the video name array
-             and categorical list of the dataset for the
-             classification purpose
-
-    TODO: the davis dataset has one category for each VIDEO,
-          it needs to reimplemented for dataset more than one
-           object in the a video.
-
-    """
-    video_name = np.array([x['metadata']['video_name'].numpy().decode("utf-8") for x in ds])
-    # uniq = np.unique(video_name)
-    categorical = to_categorical(np.arange(0, 60, 1), dtype='int32')
-    return categorical, video_name
